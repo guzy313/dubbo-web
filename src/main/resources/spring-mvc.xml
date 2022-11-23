@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+        <!-- 注解 配置包扫描 -->
+        <context:component-scan base-package="com.my">
+            <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        </context:component-scan>
+
+        <!-- 配置注解驱动 -->
+        <mvc:annotation-driven />
+
+        <!-- 静态资源映射 -->
+        <!-- MVC 框架容器内找不到的资源 交给tomcat找 开放全部静态资源 静态资源映射 -->
+        <mvc:default-servlet-handler />
+
+        <!-- 配置内部资源视图解析器 -->
+        <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="/jsp/"></property>
+            <property name="suffix" value=".jsp"></property>
+        </bean>
+
+
+        <!-- 配置AOP自动代理(配置完可以开始用AOP注解) 在springMVC框架中 AOP自动代理需要配置在mvc文件中 -->
+        <aop:aspectj-autoproxy />
+
+        <!-- 配置处理器映射器 【此配置可以使方法返回的对象自动转换成json】 -->
+        <bean id="requestMappingHandlerAdapter"     class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+            <property name="messageConverters">
+                <list>
+                    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+                </list>
+            </property>
+        </bean>
+</beans>
